@@ -14,7 +14,8 @@ public class ZkAPI {
     @Autowired
     private ZooKeeper zkClient;
 
-
+    @Autowired
+    private WatchAPI watchAPI;
     /**
      * 判断指定节点是否存在
      *
@@ -103,8 +104,9 @@ public class ZkAPI {
      *
      * @param path 父节点path
      */
-    public List<String> getChildren(String path) throws KeeperException, InterruptedException {
-        List<String> list = zkClient.getChildren(path, false);
+    public List<String> getChildren(String path,Boolean watch) throws KeeperException, InterruptedException {
+        List<String> list = zkClient.getChildren(path, watch);
+        Thread.sleep(Long.MAX_VALUE);
         return list;
     }
 
@@ -123,6 +125,10 @@ public class ZkAPI {
             e.printStackTrace();
             return null;
         }
+    }
+
+    public List<String> getDataAndWatch(String path) throws InterruptedException, KeeperException {
+        return zkClient.getChildren(path,watchAPI);
     }
 
 }
